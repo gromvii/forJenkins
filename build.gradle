@@ -23,6 +23,10 @@ tasks.withType(JavaCompile) {
 
 test {
     useJUnitPlatform()
+    
+    reports {
+        junitXml.destination = file("$buildDir/../test-results/test")
+    }
 }
 
 tasks.withType(Test) {
