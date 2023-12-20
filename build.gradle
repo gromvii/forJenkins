@@ -37,30 +37,39 @@ test {
 
 jacocoTestReport {
     reports {
-	xml.required = false
+        xml.required = false
         csv.required = false
         html.outputLocation = layout.buildDirectory.dir("../reports/jacocoHtml")
     }
 }
 
-task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier = 'javadoc'
-    from javadoc.destinationDir
-}
-
-artifacts {
-    archives javadocJar
+javadoc {
+    destinationDir = file("${buildDir}/docs/javadoc")
 }
 
 tasks.withType(Test) {
     systemProperty "file.encoding", "UTF-8"
 }
 
-allprojects {
-    gradle.projectsEvaluated {
-        tasks.withType(JavaCompile) {
-            options.compilerArgs << "-Xlint:unchecked"
+// Добавленные задачи для генерации JAR и публикации артефакта
+task createJar(type: Jar) {
+    from sourceSets.main.output
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+        }
+    }
+    repositories {
+        maven {
+            url = uri("../repos")
         }
     }
 }
 
+build.dependsOn createJar
+build.dependsOn 'javadoc'
+
+publish.dependsOn 'publish'
