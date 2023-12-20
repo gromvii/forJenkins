@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id 'jacoco'
 }
 
 repositories {
@@ -10,6 +11,11 @@ dependencies {
     testImplementation platform("org.junit:junit-bom:5.9.3")
     testImplementation "org.junit.jupiter:junit-jupiter"
     testImplementation "org.assertj:assertj-core:3.24.2"
+}
+
+jacoco {
+    toolVersion = "0.8.9"
+    reportsDirectory = layout.buildDirectory.dir("../reports/jacoco")
 }
 
 group = 'org.douggschwind'
@@ -26,6 +32,14 @@ test {
     
     reports {
         junitXml.destination = file("$buildDir/../test-results/test")
+    }
+}
+
+jacocoTestReport {
+    reports {
+	xml.required = false
+        csv.required = false
+        html.outputLocation = layout.buildDirectory.dir("../reports/jacocoHtml")
     }
 }
 
