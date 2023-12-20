@@ -43,6 +43,15 @@ jacocoTestReport {
     }
 }
 
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+artifacts {
+    archives javadocJar
+}
+
 tasks.withType(Test) {
     systemProperty "file.encoding", "UTF-8"
 }
